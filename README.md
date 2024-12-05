@@ -1,20 +1,15 @@
-# PocketBase with Redis Plugin
+# PocketBase Events
 
-A Pocketbase instance with a plugin that provides real-time event synchronization through Redis pub/sub.
+A PocketBase distribution with integrated Redis event synchronization capabilities, designed for real-time data synchronization between multiple PocketBase instances or external services.
 
 ## Features
 
+- Complete PocketBase server functionality
 - Real-time event propagation for Create/Update/Delete operations
-- Bi-directional sync between PocketBase instances (for example)
+- Bi-directional sync between PocketBase instances
 - Support for external event processing
 - Event source tracking to prevent loops
 - Built for multi-architecture (amd64/arm64)
-
-## Installation
-
-```bash
-go get github.com/sistemica/pocket-engine
-```
 
 ## Quick Start
 
@@ -22,13 +17,15 @@ go get github.com/sistemica/pocket-engine
 ```bash
 docker run -v $(pwd)/pb_data:/app/pb_data -p 8090:8090 \
   -e REDIS_URL=host.docker.internal:6379 \
-  ghcr.io/yourusername/pocket-engine
+  ghcr.io/sistemica/pocketbase-events
 ```
 
 2. Or build from source:
 ```bash
+git clone https://github.com/sistemica/pocketbase-events
+cd pocketbase-events
 go build
-./pocket-engine serve --http=0.0.0.0:8090
+./pocketbase-events serve --http=0.0.0.0:8090
 ```
 
 ## Configuration
@@ -68,22 +65,38 @@ Publish test event:
 redis-cli publish pocketbase:events:receiver '{"event":"create","collection":"test","record":{"field":"hello"},"source":"external"}'
 ```
 
+## Use Cases
+
+1. Multi-Instance Synchronization
+    - Run multiple PocketBase instances with shared data
+    - Automatic propagation of changes across instances
+    - Load balancing and high availability setups
+
+2. External Service Integration
+    - React to PocketBase changes in external services
+    - Trigger PocketBase updates from external systems
+    - Build event-driven architectures
+
+3. Data Replication
+    - Maintain data copies across different locations
+    - Implement backup strategies
+    - Create read replicas for better performance
+
 ## Development
 
 1. Clone repository:
 ```bash
-git clone https://github.com/yourusername/pocket-engine
+git clone https://github.com/sistemica/pocketbase-events
+cd pocketbase-events
 ```
 
 2. Build Docker image:
 ```bash
-docker build -t pocket-engine .
+docker build -t pocketbase-events .
 ```
 
 3. Run tests:
-```bash
-go test ./...
-```
+- no tests yet -
 
 ## Deployment
 
@@ -92,6 +105,34 @@ The project includes GitHub Actions workflow for:
 - Multi-architecture support (amd64/arm64)
 - GitHub Container Registry publishing
 - Daily builds with latest PocketBase version
+
+### Docker Registry
+Images are available at `ghcr.io/sistemica/pocketbase-events`
+
+Tags:
+- `latest`: Most recent build
+- `sha-xxxxx`: Specific commit builds
+- `vX.Y.Z`: Version releases
+
+## Architecture
+
+The system consists of three main components:
+
+1. PocketBase Core
+    - Handles all standard PocketBase operations
+    - Manages database and authentication
+    - Provides REST API and admin interface
+
+2. Redis Event Plugin
+    - Listens for PocketBase record changes
+    - Publishes events to Redis
+    - Subscribes to external events
+    - Processes incoming events
+
+3. Redis
+    - Acts as message broker
+    - Enables pub/sub communication
+    - Provides event distribution
 
 ## License
 
@@ -103,3 +144,7 @@ MIT License
 2. Create feature branch
 3. Commit changes
 4. Create pull request
+
+## Support
+
+For issues and feature requests, please use the [GitHub issue tracker](https://github.com/sistemica/pocketbase-events/issues).
