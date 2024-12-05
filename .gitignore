@@ -1,0 +1,32 @@
+```gitignore
+# Binaries and Object files
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.prof
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Go specific
+/bin/
+/pkg/
+*.pb.go
+/vendor/
+/go.work
+
+# PocketBase
+pb_data/
+pb_migrations/
+
+# Environment files
+.env
+.env.local
+```

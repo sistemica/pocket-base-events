@@ -1,0 +1,7 @@
+pb_data/
+.git/
+.gitignore
+.env
+README.md
+Dockerfile
+*.md
